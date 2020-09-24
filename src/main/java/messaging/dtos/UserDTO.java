@@ -16,4 +16,12 @@ public class UserDTO {
     @NotNull(message = "password can not be empty.")
     private String password;
 
+    public UserDTO(@NotNull(message = "username can not be empty.") String username, @NotNull(message = "password can not be empty.") String password) {
+        this.username = username;
+        this.password = password;
+    }
+
+    public UserDTO(){
+
+    }
 }
