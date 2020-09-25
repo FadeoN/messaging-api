@@ -3,6 +3,7 @@ package messaging.utils.controller;
 import messaging.exceptions.RestGeneralException;
 import messaging.exceptions.RestMethodArgumentNotValidException;
 import messaging.exceptions.RestResourceNotFoundException;
+import messaging.exceptions.RestUsernameAlreadyExistsException;
 import messaging.utils.RestApiError;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -34,11 +35,21 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
 	}
 
 	@ExceptionHandler ({RestResourceNotFoundException.class})
-	public ResponseEntity<Object> handleResourceNotFoundException(RestResourceNotFoundException ex, WebRequest request) {
+	public ResponseEntity<Object> handleResourceNotFoundException(RestResourceNotFoundException ex) {
 
 		RestApiError apiError = RestApiError.builder()
 				.httpStatus(HttpStatus.NOT_FOUND.value())
-				.exception(RestResourceNotFoundException.builder().message(ex.getLocalizedMessage()).errors(Arrays.asList("Requested resource not found")).build())
+				.exception(RestResourceNotFoundException.builder().message(ex.getType().getValidationMessage()).errors(Arrays.asList("Requested resource not found")).build())
+				.build();
+		return ResponseEntity.status(apiError.getHttpStatus()).headers(new HttpHeaders()).body(apiError);
+	}
+
+	@ExceptionHandler ({RestUsernameAlreadyExistsException.class})
+	public ResponseEntity<Object> handleUsernameAlreadyTakenException(RestUsernameAlreadyExistsException ex) {
+
+		RestApiError apiError = RestApiError.builder()
+				.httpStatus(HttpStatus.NOT_ACCEPTABLE.value())
+				.exception(RestUsernameAlreadyExistsException.builder().message(ex.getType().getValidationMessage()).errors(Arrays.asList("Username Already Exists.")).build())
 				.build();
 		return ResponseEntity.status(apiError.getHttpStatus()).headers(new HttpHeaders()).body(apiError);
 	}

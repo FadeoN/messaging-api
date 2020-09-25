@@ -9,8 +9,10 @@ import com.github.fge.jsonpatch.JsonPatchException;
 import messaging.converters.UserMapper;
 import messaging.dtos.UserDTO;
 import messaging.exceptions.RestResourceNotFoundException;
+import messaging.exceptions.RestUsernameAlreadyExistsException;
 import messaging.models.user.User;
 import messaging.repository.UserRepository;
+import messaging.utils.UserPatchUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,20 +24,24 @@ public class UserServiceImpl implements UserService {
     private UserRepository userRepository;
 
     private UserMapper userMapper;
-    private ObjectMapper objectMapper;
+    private UserPatchUtil userPatchUtil;
 
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepository, UserMapper userMapper, ObjectMapper objectMapper) {
+    public UserServiceImpl(UserRepository userRepository, UserMapper userMapper, UserPatchUtil userPatchUtil) {
         this.userRepository = userRepository;
         this.userMapper = userMapper;
-        this.objectMapper = objectMapper;
+        this.userPatchUtil = userPatchUtil;
     }
 
     @Override
     public User create(UserDTO userDTO) {
         User user = userMapper.toEntity(userDTO);
+        if(userRepository.findByUsername(user.getUsername()).isPresent()){
+            throw new RestUsernameAlreadyExistsException();
+        }
         userRepository.save(user);
+
         return user;
     }
 
@@ -44,7 +50,7 @@ public class UserServiceImpl implements UserService {
         Optional<User> user = userRepository.findById(id);
         if(user.isEmpty()) throw new RestResourceNotFoundException();
 
-        User trackPatched = applyPatchToCustomer(patch, user.get());
+        User trackPatched = userPatchUtil.applyPatchToUser(patch, user.get());
 
         userRepository.save(trackPatched);
 
@@ -62,8 +68,5 @@ public class UserServiceImpl implements UserService {
         return userRepository.findById(id);
     }
 
-    private User applyPatchToCustomer(JsonPatch patch, User targetCustomer) throws JsonPatchException, JsonProcessingException {
-        JsonNode patched = patch.apply(objectMapper.convertValue(targetCustomer, JsonNode.class));
-        return objectMapper.treeToValue(patched, User.class);
-    }
+
 }

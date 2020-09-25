@@ -1,4 +1,4 @@
-package messaging;
+package messaging.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.fge.jsonpatch.JsonPatch;

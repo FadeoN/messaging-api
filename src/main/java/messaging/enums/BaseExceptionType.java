@@ -8,7 +8,8 @@ public enum BaseExceptionType {
     REST_GENERAL_EXCEPTION("General exception occured."),
     REST_CONSTRAINT_VIOLATAION_EXCEPTION("Constraint violation exception occured"),
     REST_METHOD_ARGUEMENT_NOT_VALID_EXCEPTION("Arguments passed not valid."),
-    REST_RESOURCE_NOT_FOUND_EXCEPTION("Resource not found.");
+    REST_RESOURCE_NOT_FOUND_EXCEPTION("Resource not found."),
+    REST_USERNAME_ALREADY_EXISTS_EXCEPTION("Username already exists.");
     @Getter
     private final String validationMessage;
 

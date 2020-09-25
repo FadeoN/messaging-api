@@ -1,4 +1,4 @@
-package messaging;
+package messaging.repository;
 
 import messaging.models.user.User;
 import messaging.repository.UserRepository;
