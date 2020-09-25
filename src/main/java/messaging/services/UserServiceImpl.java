@@ -64,8 +64,10 @@ public class UserServiceImpl implements UserService {
 
     //TODO: Remove sensitive data
     @Override
-    public Optional<User> getByID(Long id) {
-        return userRepository.findById(id);
+    public Optional<UserDTO> getByID(Long id) {
+        Optional<User> user = userRepository.findById(id);
+        return user.map(value -> userMapper.toDTO(value));
+
     }
 
 

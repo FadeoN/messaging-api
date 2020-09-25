@@ -52,8 +52,8 @@ public class UserController {
 
 
     @GetMapping (URLConstants.USER_ID)
-    public ResponseEntity<Optional<User>> getItem(@PathVariable ("id") Long userID) {
-        Optional<User> user = userService.getByID(userID);
+    public ResponseEntity<Optional<UserDTO>> getItem(@PathVariable ("id") Long userID) {
+        Optional<UserDTO> user = userService.getByID(userID);
         if(user.isEmpty()) throw new RestResourceNotFoundException();
         return ResponseEntity.ok().body(user);
     }

@@ -127,7 +127,7 @@ public class UserServiceTest {
 
         given(userRepository.findById(userID)).willReturn(Optional.of(user));
 
-        final Optional<User> expected  = userService.getByID(userID);
+        final Optional<UserDTO> expected  = userService.getByID(userID);
 
         assertThat(expected).isNotNull();
 
