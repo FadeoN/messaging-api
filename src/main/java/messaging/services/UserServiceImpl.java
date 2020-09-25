@@ -56,6 +56,7 @@ public class UserServiceImpl implements UserService {
         userRepository.deleteById(id);
     }
 
+    //TODO: Remove sensitive data
     @Override
     public Optional<User> getByID(Long id) {
         return userRepository.findById(id);

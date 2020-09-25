@@ -25,7 +25,7 @@ public class User {
     public User() {
     }
 
-    @Builder
+    @Builder(toBuilder = true)
     public User(Long id, String username, String password) {
         this.id = id;
         this.username = username;

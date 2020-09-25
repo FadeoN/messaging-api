@@ -4,10 +4,10 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.github.fge.jsonpatch.JsonPatch;
 import com.github.fge.jsonpatch.JsonPatchException;
 import messaging.dtos.UserDTO;
+import messaging.exceptions.RestResourceNotFoundException;
 import messaging.models.user.User;
 import messaging.services.UserService;
 import messaging.utils.URLConstants;
-import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -54,6 +54,7 @@ public class UserController {
     @GetMapping (URLConstants.USER_ID)
     public ResponseEntity<Optional<User>> getItem(@PathVariable ("id") Long userID) {
         Optional<User> user = userService.getByID(userID);
+        if(user.isEmpty()) throw new RestResourceNotFoundException();
         return ResponseEntity.ok().body(user);
     }
 
