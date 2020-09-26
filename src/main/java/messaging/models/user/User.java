@@ -19,6 +19,7 @@ public class User {
     @Column(nullable = false, unique = true)
     private String username;
 
+    //TODO: Password Encoding
     @Column(nullable = false)
     private String password;
 

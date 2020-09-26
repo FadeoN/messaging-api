@@ -2,12 +2,14 @@ package messaging.controllers;
 
 import messaging.dtos.ChatMessageDTO;
 import messaging.models.chat.ChatMessage;
+import messaging.models.chat.ChatNotification;
 import messaging.services.chat.ChatMessageService;
 import messaging.utils.URLConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.HtmlUtils;
@@ -17,17 +19,23 @@ import java.util.List;
 
 @Controller
 @RestController
-@RequestMapping("/v1/chat")
+@RequestMapping("/messages")
 public class ChatController {
 
     @Autowired private ChatMessageService chatMessageService;
+    @Autowired private SimpMessagingTemplate messagingTemplate;
 
-    @MessageMapping("/hello")
-    @SendTo("topic/greetings")
-    public ResponseEntity<ChatMessage> sendMessage(ChatMessageDTO message) throws Exception {
+    @MessageMapping("/chat")
+    public ChatMessage sendMessage(ChatMessageDTO message) throws Exception {
         ChatMessage savedMessage = chatMessageService.save(message);
-        URI location = URI.create(String.format("/v1/chat/%s", savedMessage.getId()));
-        return ResponseEntity.created(location).build();
+
+        messagingTemplate.convertAndSendToUser(
+                savedMessage.getRecipientUsername(),"/queue/messages",
+                new ChatNotification(
+                        savedMessage.getId(),
+                        savedMessage.getSenderUsername()));
+
+        return savedMessage;
     }
 
 
@@ -48,7 +56,7 @@ public class ChatController {
                 .ok(chatMessages);
     }
 
-    @GetMapping("/messages/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<ChatMessage> findMessage ( @PathVariable("id") String id) {
         ChatMessage chatMessage = chatMessageService.findById(id).get();
         return ResponseEntity
