@@ -13,8 +13,8 @@ import java.util.Date;
 @Builder
 public class ChatMessageDTO {
 
-    @NonNull private Long senderId;
-    @NonNull private Long recipientId;
+    @NonNull private String senderUsername;
+    @NonNull private String recipientUsername;
     private String content;
 
     @Builder.Default
@@ -23,4 +23,6 @@ public class ChatMessageDTO {
     @Enumerated(EnumType.STRING)
     @Builder.Default
     private MessageStatus status = MessageStatus.RECEIVED;
+
+
 }

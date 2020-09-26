@@ -13,14 +13,13 @@ import java.util.List;
 @Repository
 public interface ChatMessageRepository extends CrudRepository<ChatMessage, String> {
 
-    Long countBySenderIdAndRecipientIdAndStatus(
-            Long senderId, Long recipientId, MessageStatus status);
+    Long countBySenderUsernameAndRecipientUsernameAndStatus(String senderUsername, String recipientUsername, MessageStatus status);
 
     List<ChatMessage> findByChatId(String chatId);
 
     @Transactional
     @Modifying
-    @Query("UPDATE ChatMessage cm SET cm.status = ?3 WHERE cm.senderId = ?1 AND cm.recipientId = ?2")
-    void updateStatuses(Long senderId, Long recipientId, MessageStatus status);
+    @Query("UPDATE ChatMessage cm SET cm.status = ?3 WHERE cm.senderUsername = ?1 AND cm.recipientUsername = ?2")
+    void updateStatuses(String senderUsername, String recipientUsername, MessageStatus status);
 
 }

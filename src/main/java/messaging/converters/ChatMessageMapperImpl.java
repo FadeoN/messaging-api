@@ -12,8 +12,8 @@ public class ChatMessageMapperImpl implements ChatMessageMapper{
     @Override
     public ChatMessageDTO toDTO(ChatMessage entity) {
         return ChatMessageDTO.builder()
-                .senderId(entity.getSenderId())
-                .recipientId(entity.getRecipientId())
+                .senderUsername(entity.getSenderUsername())
+                .recipientUsername(entity.getRecipientUsername())
                 .content(entity.getContent())
                 .timestamp(entity.getTimestamp())
                 .status(entity.getStatus())
@@ -24,8 +24,8 @@ public class ChatMessageMapperImpl implements ChatMessageMapper{
     public ChatMessage toEntity(ChatMessageDTO dto) {
 
         return ChatMessage.builder()
-                .senderId(dto.getSenderId())
-                .recipientId(dto.getRecipientId())
+                .senderUsername(dto.getSenderUsername())
+                .recipientUsername(dto.getRecipientUsername())
                 .content(dto.getContent())
                 .timestamp(dto.getTimestamp())
                 .status(dto.getStatus())

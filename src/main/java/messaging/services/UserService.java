@@ -17,5 +17,6 @@ public interface UserService {
     void delete(Long id);
 
     Optional<UserDTO> getByID(Long id);
+    Optional<UserDTO> getByUsername(String username);
 
 }

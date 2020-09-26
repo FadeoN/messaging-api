@@ -14,30 +14,30 @@ public class ChatRoomServiceImpl implements ChatRoomService{
     private ChatRoomRepository chatRoomRepository;
 
     public Optional<String> getChatId(
-            Long senderId, Long recipientId, boolean createIfNotExist) {
+            String senderUsername, String recipientUsername, boolean createIfNotExist) {
 
         return chatRoomRepository
-                .findBySenderIdAndRecipientId(senderId, recipientId)
+                .findBySenderUsernameAndRecipientUsername(senderUsername, recipientUsername)
                 .map(ChatRoom::getChatId)
                 .or(() -> {
                     if(!createIfNotExist) {
                         return  Optional.empty();
                     }
                     String chatId =
-                            String.format("%d_%d", senderId, recipientId);
+                            String.format("%s_%s", senderUsername, recipientUsername);
 
                     ChatRoom senderRecipient = ChatRoom
                             .builder()
                             .chatId(chatId)
-                            .senderId(senderId)
-                            .recipientId(recipientId)
+                            .senderUsername(senderUsername)
+                            .recipientUsername(recipientUsername)
                             .build();
 
                     ChatRoom recipientSender = ChatRoom
                             .builder()
                             .chatId(chatId)
-                            .senderId(recipientId)
-                            .recipientId(senderId)
+                            .senderUsername(recipientUsername)
+                            .recipientUsername(senderUsername)
                             .build();
                     chatRoomRepository.save(senderRecipient);
                     chatRoomRepository.save(recipientSender);

@@ -24,10 +24,8 @@ public class ChatMessage {
     @Builder.Default
     private String id = UUID.randomUUID().toString();
     private String chatId;
-    private Long senderId;
-    private Long recipientId;
-    private String senderName;
-    private String recipientName;
+    private String senderUsername;
+    private String recipientUsername;
     private String content;
     private Date timestamp;
 

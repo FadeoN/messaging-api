@@ -7,6 +7,7 @@ import messaging.utils.URLConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.HtmlUtils;
@@ -21,35 +22,37 @@ public class ChatController {
 
     @Autowired private ChatMessageService chatMessageService;
 
-    //TODO: ChatMessage DTO
-    @PostMapping
-    public ResponseEntity<ChatMessage> sendMessage(@RequestBody ChatMessageDTO message) throws Exception {
+    @MessageMapping("/hello")
+    @SendTo("topic/greetings")
+    public ResponseEntity<ChatMessage> sendMessage(ChatMessageDTO message) throws Exception {
         ChatMessage savedMessage = chatMessageService.save(message);
         URI location = URI.create(String.format("/v1/chat/%s", savedMessage.getId()));
         return ResponseEntity.created(location).build();
     }
 
 
-    @GetMapping("/{senderId}/{recipientId}/count")
+    @GetMapping("/{senderUsername}/{recipientUsername}/count")
     public ResponseEntity<Long> countNewMessages(
-            @PathVariable Long senderId,
-            @PathVariable Long recipientId) {
+            @PathVariable String senderUsername,
+            @PathVariable String recipientUsername) {
 
         return ResponseEntity
-                .ok(chatMessageService.countNewMessages(senderId, recipientId));
+                .ok(chatMessageService.countNewMessages(senderUsername, recipientUsername));
     }
 
-    @GetMapping("/{senderId}/{recipientId}")
-    public ResponseEntity<List<ChatMessage>> findChatMessages (@PathVariable Long senderId,
-                                                               @PathVariable Long recipientId) {
+    @GetMapping("/{senderUsername}/{recipientUsername}")
+    public ResponseEntity<List<ChatMessage>> findChatMessages (@PathVariable String senderUsername,
+                                                               @PathVariable String recipientUsername) {
+        List<ChatMessage> chatMessages = chatMessageService.findChatMessages(senderUsername, recipientUsername);
         return ResponseEntity
-                .ok(chatMessageService.findChatMessages(senderId, recipientId));
+                .ok(chatMessages);
     }
 
     @GetMapping("/messages/{id}")
-    public ResponseEntity<ChatMessage> findMessage ( @PathVariable String id) {
+    public ResponseEntity<ChatMessage> findMessage ( @PathVariable("id") String id) {
+        ChatMessage chatMessage = chatMessageService.findById(id).get();
         return ResponseEntity
-                .ok(chatMessageService.findById(id).get());
+                .ok(chatMessage);
     }
 
 }
