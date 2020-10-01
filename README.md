@@ -1,1 +1,1 @@
-# messaging-api
+# com.messaging-api

@@ -1,0 +1,22 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Fancy blog!</title>
+  <div th:replace="fragments/header"/>
+</head>
+<body>
+
+<div th:replace="fragments/navbar :: header('index')"/>
+<main role="main" class="container">
+  <div class="container">
+
+    <div class="starter-template">
+      <h1>Latest articles</h1>
+    </div>
+
+  </div>
+</main>
+
+<div th:replace="fragments/footer :: footer"/>
+
+</body>
