@@ -1,6 +1,7 @@
-package com.messaging.configs.chat;
+package com.messaging.configs.security;
 
 import com.messaging.services.UserService;
+import com.messaging.utils.URLConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -35,15 +36,19 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
+                .csrf().disable()
                 .authorizeRequests()
                 .antMatchers("/").permitAll()
-                .antMatchers("/register").permitAll()
-                .antMatchers("/user").hasRole("USER")
-                .antMatchers("/messages/**").hasRole("USER")
+                .antMatchers("/index").permitAll()
+                .antMatchers(String.format("%s%s", URLConstants.USERS_BASE_URL, URLConstants.USERS_REGISTER_URL)).permitAll()
+                .antMatchers("/swagger-ui.html/**").hasRole("USER")
+                .antMatchers(String.format("%s/blocked", URLConstants.USERS_BASE_URL)).hasRole("USER")
+                .antMatchers(String.format("%s/**", URLConstants.USERS_BASE_URL)).hasRole("USER")
+                .antMatchers(String.format("%s/**", URLConstants.CHAT_BASE_URL)).hasRole("USER")
                 .anyRequest().authenticated()
                 .and()
                 .formLogin()
-                .loginPage("/login")
+                .loginPage(String.format("%s%s", URLConstants.USERS_BASE_URL, URLConstants.USERS_LOGIN_URL))
                 .permitAll()
                 .and()
                 .logout().deleteCookies("JSESSIONID")

@@ -1,5 +1,8 @@
 package com.messaging.models.user;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.messaging.models.BlockRelation;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -17,6 +20,7 @@ import java.util.Set;
 @Entity
 @Data
 @Builder
+@JsonIgnoreProperties(value = {"password" , "roles", "authorities", "accountNonExpired", "credentialsNonExpired", "accountNonLocked", "enabled"})
 public class User implements UserDetails {
 
     @Id
@@ -26,11 +30,11 @@ public class User implements UserDetails {
     @Column(nullable = false, unique = true)
     private String username;
 
-    //TODO: Password Encoding
     @Column(nullable = false)
     private String password;
 
 
+    @JsonManagedReference
     @ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
     @JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles;

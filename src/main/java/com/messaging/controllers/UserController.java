@@ -1,5 +1,6 @@
 package com.messaging.controllers;
 
+import com.messaging.dtos.RegisterUserForm;
 import com.messaging.dtos.UserDTO;
 import com.messaging.services.UserService;
 import com.messaging.utils.URLConstants;
@@ -22,7 +23,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 @Controller
-//@RequestMapping(URLConstants.USERS_BASE_URL)
+@RequestMapping(URLConstants.USERS_BASE_URL)
 @Validated
 public class UserController {
 
@@ -34,13 +35,13 @@ public class UserController {
         this.userService = userService;
     }
 
-    @GetMapping("/register")
+    @GetMapping(URLConstants.USERS_REGISTER_URL)
     ModelAndView getRegister(Model model) {
         model.addAttribute("registerUserForm", new RegisterUserForm());
         return new ModelAndView("register", "registerUserForm", new RegisterUserForm());
     }
 
-    @PostMapping("/register")
+    @PostMapping(URLConstants.USERS_REGISTER_URL)
     ModelAndView postRegister(@ModelAttribute("registerUserForm") @Valid RegisterUserForm userForm,
                               BindingResult bindingResult) {
         // REMOVE This part catch username error
@@ -58,7 +59,7 @@ public class UserController {
             user.setPassword(userForm.getPassword());
             userService.create(user);
             userService.autoLogin(userForm.getUsername(), userForm.getPassword());
-            return new ModelAndView("redirect:/home");
+            return new ModelAndView("redirect:/");
         } else {
             userForm.setUsername(userForm.getUsername().toLowerCase());
             ModelAndView template = new ModelAndView("register", "registerUserForm", userForm);
@@ -67,7 +68,7 @@ public class UserController {
         }
     }
 
-    @GetMapping("/login")
+    @GetMapping(URLConstants.USERS_LOGIN_URL)
     public String login(Model model,
                         @RequestParam(required = false) String error) {
         if (error != null) {
@@ -76,7 +77,7 @@ public class UserController {
         return "login";
     }
 
-    @GetMapping("/logout")
+    @GetMapping(URLConstants.USERS_LOGOUT_URL)
     public String logoutPage(HttpServletRequest request, HttpServletResponse response,
                              RedirectAttributes redirectAttributes) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -84,7 +85,8 @@ public class UserController {
             new SecurityContextLogoutHandler().logout(request, response, auth);
         }
         redirectAttributes.addFlashAttribute("success", "You have been logged out");
-        return "redirect:/login";
+        return "redirect:/";
     }
+
 
 }

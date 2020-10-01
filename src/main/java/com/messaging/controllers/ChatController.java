@@ -4,6 +4,7 @@ import com.messaging.dtos.ChatMessageDTO;
 import com.messaging.models.chat.ChatMessage;
 import com.messaging.models.chat.ChatNotification;
 import com.messaging.services.chat.ChatMessageService;
+import com.messaging.utils.URLConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -20,7 +21,7 @@ import java.util.List;
 
 @Controller
 @RestController
-@RequestMapping("/messages")
+@RequestMapping(URLConstants.CHAT_BASE_URL)
 public class ChatController {
 
     @Autowired private ChatMessageService chatMessageService;
@@ -46,9 +47,9 @@ public class ChatController {
     }
 
 
-    @GetMapping("/count/{recipientUsername}")
+    @GetMapping(URLConstants.CHAT_COUNT_URL)
     public ResponseEntity<Long> countNewMessages(@AuthenticationPrincipal Principal user,
-            @PathVariable String recipientUsername) {
+            @PathVariable("id") String recipientUsername) {
 
         /*Get Current User*/
         String senderUsername = user.getName();
@@ -58,8 +59,8 @@ public class ChatController {
                 .ok(chatMessageService.countNewMessages(senderUsername, recipientUsername));
     }
 
-    @GetMapping("/{senderUsername}")
-    public ResponseEntity<List<ChatMessage>> findChatMessages (@AuthenticationPrincipal Principal user, @PathVariable String senderUsername) {
+    @GetMapping(URLConstants.CHAT_MESSAGE_LIST_URL)
+    public ResponseEntity<List<ChatMessage>> findChatMessages (@AuthenticationPrincipal Principal user, @PathVariable("id") String senderUsername) {
         /*Get Current User*/
         String loggedInUsername = user.getName();
 
@@ -69,7 +70,7 @@ public class ChatController {
                 .ok(chatMessages);
     }
 
-    @GetMapping("/message/{id}")
+    @GetMapping(URLConstants.CHAT_MESSAGE_URL)
     public ResponseEntity<ChatMessage> findMessage (@PathVariable("id") String id) {
         ChatMessage chatMessage = chatMessageService.findById(id).get();
         return ResponseEntity

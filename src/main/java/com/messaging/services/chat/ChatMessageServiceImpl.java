@@ -2,7 +2,9 @@ package com.messaging.services.chat;
 
 import com.messaging.converters.ChatMessageMapper;
 import com.messaging.dtos.ChatMessageDTO;
-import com.messaging.exceptions.RestRecipientDoesNotExists;
+import com.messaging.exceptions.RestBlockedByRecipientUserException;
+import com.messaging.exceptions.RestRecipientDoesNotExistsException;
+import com.messaging.exceptions.RestResourceNotFoundException;
 import com.messaging.models.chat.ChatMessage;
 import com.messaging.models.chat.MessageStatus;
 import com.messaging.repository.chat.ChatMessageRepository;
@@ -24,7 +26,9 @@ public class ChatMessageServiceImpl implements ChatMessageService{
 
     @Override
     public ChatMessage save(ChatMessageDTO chatMessageDTO) {
-        if(userService.getByUsername(chatMessageDTO.getRecipientUsername()).isEmpty()) throw new RestRecipientDoesNotExists();
+        if(userService.getByUsername(chatMessageDTO.getRecipientUsername()).isEmpty()) throw new RestRecipientDoesNotExistsException();
+        if(userService.isBlockedByRecipientUser(chatMessageDTO.getSenderUsername(), chatMessageDTO.getRecipientUsername())) throw new RestBlockedByRecipientUserException();
+
         String chatId = chatRoomService
                 .getChatId(chatMessageDTO.getSenderUsername(), chatMessageDTO.getRecipientUsername(), true).get();
         ChatMessage chatMessage = chatMessageMapper.toEntity(chatMessageDTO);
@@ -32,12 +36,15 @@ public class ChatMessageServiceImpl implements ChatMessageService{
 
 
         ChatMessage saved = chatMessageRepository.save(chatMessage);
-        System.out.println(saved);
+
         return saved;
     }
 
     public Optional<ChatMessage> findById(String id){
-        return chatMessageRepository.findById(id);
+        Optional<ChatMessage> chatMessage =  chatMessageRepository.findById(id);
+        if(chatMessage.isEmpty()) throw new RestResourceNotFoundException();
+
+        return chatMessage;
     }
 
     @Override
