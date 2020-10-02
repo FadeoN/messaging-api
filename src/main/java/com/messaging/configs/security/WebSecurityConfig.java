@@ -45,6 +45,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(String.format("%s/blocked", URLConstants.USERS_BASE_URL)).hasRole("USER")
                 .antMatchers(String.format("%s/**", URLConstants.USERS_BASE_URL)).hasRole("USER")
                 .antMatchers(String.format("%s/**", URLConstants.CHAT_BASE_URL)).hasRole("USER")
+                .antMatchers(String.format("%s", URLConstants.LOG_ACTIVITY_URL)).hasRole("USER")
                 .anyRequest().authenticated()
                 .and()
                 .formLogin()

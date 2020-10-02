@@ -76,6 +76,7 @@ public class UserServiceImpl implements UserService {
         return user;
     }
 
+    @Override
     public void autoLogin(String username, String password) {
         UserDetails userDetails = this.getByUsername(username).get();
         UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken =
@@ -89,22 +90,6 @@ public class UserServiceImpl implements UserService {
         }
     }
 
-    @Override
-    public User getLoggedInUser() {
-        Object user = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        if (user instanceof User) {
-            return (User) user;
-        }
-        return null;
-    }
-
-    @Override
-    public boolean isAuthenticated() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        return authentication != null && !(authentication instanceof AnonymousAuthenticationToken)
-                && authentication.isAuthenticated();
-
-    }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {

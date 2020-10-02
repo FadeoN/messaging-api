@@ -21,8 +21,6 @@ public interface UserService extends UserDetailsService, UserRelationService {
     Optional<User> getByUsername(String username);
 
     /* Auth ops */
-    User getLoggedInUser();
-    boolean isAuthenticated();
     void autoLogin(String username, String password);
 
 

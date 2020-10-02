@@ -5,6 +5,7 @@ import com.github.fge.jsonpatch.JsonPatch;
 import com.messaging.converters.UserMapper;
 import com.messaging.dtos.UserDTO;
 import com.messaging.exceptions.RestUsernameAlreadyExistsException;
+import com.messaging.models.user.Role;
 import com.messaging.models.user.User;
 import com.messaging.repository.user.UserRepository;
 import com.messaging.utils.UserPatchUtil;
@@ -14,6 +15,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.util.Optional;
 
@@ -29,6 +31,12 @@ public class UserServiceTest {
 
     @Mock
     private UserRepository userRepository;
+
+    @Mock
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
+
+    @Mock
+    private RoleService roleService;
 
     @Mock
     private UserMapper userMapper;
@@ -65,8 +73,14 @@ public class UserServiceTest {
     @Test
     void itShouldSaveUserSuccessFully() {
 
+        Role role = new Role();
+        role.setName("USER");
+
         given(userMapper.toEntity(userDTO)).willReturn(user);
+        given(roleService.getOrCreateRole("USER")).willReturn(role);
+
         given(userRepository.save(user)).willAnswer(invocation -> invocation.getArgument(0));
+        given(bCryptPasswordEncoder.encode(any(String.class))).willReturn(user.getPassword());
 
         User savedUser = userService.create(userDTO);
 
@@ -79,9 +93,9 @@ public class UserServiceTest {
     @Test
     void shouldThrowErrorWhenSaveUserWithExistingEmail() {
 
+        Role role = new Role();
+        role.setName("USER");
 
-
-        given(userMapper.toEntity(userDTO)).willReturn(user);
         given(userRepository.findByUsername(user.getUsername())).willReturn(Optional.of(user));
 
         assertThrows(RestUsernameAlreadyExistsException.class,() -> {
