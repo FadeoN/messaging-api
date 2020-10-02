@@ -1,8 +1,7 @@
 package com.messaging.controllers;
 
-import com.messaging.models.BlockRelation;
+import com.messaging.models.user.BlockRelation;
 import com.messaging.services.UserService;
-import com.messaging.services.chat.ChatMessageService;
 import com.messaging.utils.URLConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -24,6 +23,7 @@ public class UserRelationController {
     @Autowired
     private UserService userService;
 
+
     @PostMapping(URLConstants.USERS_ID_URL)
     public ResponseEntity<Void> blockUser(@AuthenticationPrincipal Principal user,
                                                  @PathVariable("id") String targetUsername) {
@@ -36,6 +36,8 @@ public class UserRelationController {
         return ResponseEntity
                 .created(location).build();
     }
+
+
 
     @GetMapping
     public ResponseEntity<List<BlockRelation>> blockUser(@AuthenticationPrincipal Principal user) {

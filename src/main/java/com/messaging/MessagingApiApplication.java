@@ -12,7 +12,6 @@ public class MessagingApiApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(MessagingApiApplication.class, args);
-        logger.info("Simple log statement with inputs {}, {} and {}", 1,2,3);
 
     }
 }

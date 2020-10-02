@@ -14,4 +14,7 @@ public final class URLConstants {
     public static final String CHAT_COUNT_URL = "/count/{id}";
     public static final String CHAT_MESSAGE_LIST_URL = "/messages/{id}";
     public static final String CHAT_MESSAGE_URL = "/message/{id}";
+
+    public static final String LOG_ACTIVITY_URL = "/v1/activity/";
+
 }

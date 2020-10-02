@@ -6,7 +6,7 @@ import com.messaging.converters.UserMapper;
 import com.messaging.dtos.UserDTO;
 import com.messaging.exceptions.RestUsernameAlreadyExistsException;
 import com.messaging.models.user.User;
-import com.messaging.repository.UserRepository;
+import com.messaging.repository.user.UserRepository;
 import com.messaging.utils.UserPatchUtil;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

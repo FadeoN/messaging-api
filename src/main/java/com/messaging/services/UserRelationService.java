@@ -1,6 +1,6 @@
 package com.messaging.services;
 
-import com.messaging.models.BlockRelation;
+import com.messaging.models.user.BlockRelation;
 
 import java.util.List;
 

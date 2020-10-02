@@ -1,6 +1,5 @@
-package com.messaging.models;
+package com.messaging.models.user;
 
-import com.messaging.models.user.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

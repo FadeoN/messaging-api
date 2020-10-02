@@ -1,4 +1,4 @@
-package com.messaging.repository;
+package com.messaging.repository.user;
 
 import com.messaging.models.user.User;
 import org.springframework.data.repository.CrudRepository;

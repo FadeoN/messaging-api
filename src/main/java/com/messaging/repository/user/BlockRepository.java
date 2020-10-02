@@ -1,7 +1,6 @@
-package com.messaging.repository;
+package com.messaging.repository.user;
 
-import com.messaging.models.BlockRelation;
-import com.messaging.models.user.User;
+import com.messaging.models.user.BlockRelation;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;

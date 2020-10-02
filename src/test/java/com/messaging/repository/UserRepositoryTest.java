@@ -1,6 +1,7 @@
 package com.messaging.repository;
 
 import com.messaging.models.user.User;
+import com.messaging.repository.user.UserRepository;
 import org.junit.jupiter.api.Test;
 
 import org.springframework.beans.factory.annotation.Autowired;
