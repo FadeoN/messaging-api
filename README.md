@@ -16,19 +16,19 @@ A messaging api case study application developed using Spring Boot, H2, Swagger.
 
 Login Page
 
-![Login Page](img/login.png "Login Page")
+![Login Page](img/login.PNG "Login Page")
 
 Registration Page
 
-![Registration Page](img/registration.png "Registration Page")
+![Registration Page](img/registration.PNG "Registration Page")
 
 Message Page
 
-![Message Page](img/message.png "Message Page")
+![Message Page](img/message.PNG "Message Page")
 
 Swagger Page
 
-![Swagger Page](img/swagger-config.png "Swagger Page")
+![Swagger Page](img/swagger-config.PNG "Swagger Page")
 
 ## Next:
 
